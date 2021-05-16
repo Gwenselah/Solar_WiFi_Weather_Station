@@ -7,9 +7,13 @@
 
 ******* configuration control constant for use of Blynk and/or Thingspeak ***/
 
+/*
 const String App1 = "BLYNK";         // empty string if not applicable -> "" else "BLYNK" 
 const String App2 = "THINGSPEAK";    // empty string if not applicable -> "" else "THINGSPEAK"
+*/
 
+const String App1 = "";         // empty string if not applicable -> "" else "BLYNK" 
+const String App2 = "";    // empty string if not applicable -> "" else "THINGSPEAK"
 
 /****** Blink or ThingSpeak Settings ****************************************/
 
@@ -23,8 +27,10 @@ const char* api_key = "your Thingspeak API key";         // API write key
 
 /****** MQTT Settings ********************************************************/
 
-const char* mqtt_server = "192.xxx.xxx.xxx";      // MQTT Server (broker) address
-
+const char* mqtt_server = "10.1.24.100";      // MQTT Server (broker) address
+const int mqtt_port = 1885; 
+const char* mqttUser = "MQTTUSer";
+const char* mqttPassword = "XXXXX";
 
 /****** Additional Settings **************************************************/
 
@@ -77,16 +83,15 @@ Status: Zambrettis Words + Trend in Words + Accuracy
 
 MQTT:
 
-home/weather/solarweatherstation/tempc
-home/weather/solarweatherstation/heatindexc
-home/weather/solarweatherstation/dewpointc
-home/weather/solarweatherstation/spreadc
-home/weather/solarweatherstation/abshpa
-home/weather/solarweatherstation/relhpa
-home/weather/solarweatherstation/humi
-home/weather/solarweatherstation/battv
-home/weather/solarweatherstation/zambrettisays
-home/weather/solarweatherstation/trend
-home/weather/solarweatherstation/accuracy
-
+weather/solarweatherstation/tempc
+weather/solarweatherstation/heatindexc
+weather/solarweatherstation/dewpointc
+weather/solarweatherstation/spreadc
+weather/solarweatherstation/abshpa
+weather/solarweatherstation/relhpa
+weather/solarweatherstation/humi
+weather/solarweatherstation/battv
+weather/solarweatherstation/zambrettisays
+weather/solarweatherstation/trend
+weather/solarweatherstation/accuracy
 ***************************************************************************/

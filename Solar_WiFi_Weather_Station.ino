@@ -85,7 +85,7 @@
 #include <ESP8266WiFi.h>
 #include <WiFiUdp.h>
 #include "FS.h"
-#include <EasyNTPClient.h>       //https://github.com/aharshac/EasyNTPClient
+ #include <EasyNTPClient.h>       //https://github.com/aharshac/EasyNTPClient
 #include <TimeLib.h>             //https://github.com/PaulStoffregen/Time.git
 #include <PubSubClient.h>        // For MQTT (in this case publishing only)
 
@@ -173,7 +173,7 @@ void setup() {
   
   connect_to_MQTT();            // connecting to MQTT broker
 
-  client.publish("home/debug", "SolarWeatherstation: Sensor started");
+  client.publish("weather/solarweatherstation/debug", "SolarWeatherstation: Sensor started");
   delay(50);
   
   //*****************Checking if SPIFFS available********************************
@@ -357,71 +357,71 @@ void setup() {
   char _adjusted_temp[8];                                // Buffer big enough for 7-character float
   dtostrf(adjusted_temp, 3, 1, _adjusted_temp);               // Leave room for too large numbers!
 
-  client.publish("home/weather/solarweatherstation/tempc", _adjusted_temp, 1);      // ,1 = retained
+  client.publish("weather/solarweatherstation/tempc", _adjusted_temp, 1);      // ,1 = retained
   delay(50);
   
   char _adjusted_humi[8];                                // Buffer big enough for 7-character float
   dtostrf(adjusted_humi, 3, 0, _adjusted_humi);               // Leave room for too large numbers!
 
-  client.publish("home/weather/solarweatherstation/humi", _adjusted_humi, 1);      // ,1 = retained
+  client.publish("weather/solarweatherstation/humi", _adjusted_humi, 1);      // ,1 = retained
   delay(50);
 
   char _measured_pres[8];                                // Buffer big enough for 7-character float
   dtostrf(measured_pres, 3, 0, _measured_pres);               // Leave room for too large numbers!
 
-  client.publish("home/weather/solarweatherstation/abshpa", _measured_pres, 1);      // ,1 = retained
+  client.publish("weather/solarweatherstation/abshpa", _measured_pres, 1);      // ,1 = retained
   delay(50);
  
   char _rel_pressure_rounded[8];                                // Buffer big enough for 7-character float
   dtostrf(rel_pressure_rounded, 3, 0, _rel_pressure_rounded);               // Leave room for too large numbers!
 
-  client.publish("home/weather/solarweatherstation/relhpa", _rel_pressure_rounded, 1);      // ,1 = retained
+  client.publish("weather/solarweatherstation/relhpa", _rel_pressure_rounded, 1);      // ,1 = retained
   delay(50);
 
   char _volt[8];                                // Buffer big enough for 7-character float
   dtostrf(volt, 3, 2, _volt);               // Leave room for too large numbers!
 
-  client.publish("home/weather/solarweatherstation/battv", _volt, 1);      // ,1 = retained
+  client.publish("weather/solarweatherstation/battv", _volt, 1);      // ,1 = retained
   delay(50);
 
   char _DewpointTemperature[8];                                // Buffer big enough for 7-character float
   dtostrf(DewpointTemperature, 3, 1, _DewpointTemperature);               // Leave room for too large numbers!
 
-  client.publish("home/weather/solarweatherstation/dewpointc", _DewpointTemperature, 1);      // ,1 = retained
+  client.publish("weather/solarweatherstation/dewpointc", _DewpointTemperature, 1);      // ,1 = retained
   delay(50);
 
   char _HeatIndex[8];                                // Buffer big enough for 7-character float
   dtostrf(HeatIndex, 3, 1, _HeatIndex);               // Leave room for too large numbers!
 
-  client.publish("home/weather/solarweatherstation/heatindexc", _HeatIndex, 1);      // ,1 = retained
+  client.publish("weather/solarweatherstation/heatindexc", _HeatIndex, 1);      // ,1 = retained
   delay(50);
 
   char _accuracy_in_percent[8];                                // Buffer big enough for 7-character float
   dtostrf(accuracy_in_percent, 3, 0, _accuracy_in_percent);               // Leave room for too large numbers!
 
-  client.publish("home/weather/solarweatherstation/accuracy", _accuracy_in_percent, 1);      // ,1 = retained
+  client.publish("weather/solarweatherstation/accuracy", _accuracy_in_percent, 1);      // ,1 = retained
   delay(50);
 
   char _DewPointSpread[8];                                // Buffer big enough for 7-character float
   dtostrf(DewPointSpread, 3, 1, _DewPointSpread);               // Leave room for too large numbers!
 
-  client.publish("home/weather/solarweatherstation/spreadc", _DewPointSpread, 1);      // ,1 = retained
+  client.publish("weather/solarweatherstation/spreadc", _DewPointSpread, 1);      // ,1 = retained
   delay(50);
 
   char tmp1[128];
   ZambrettisWords.toCharArray(tmp1, 128);
-  client.publish("home/weather/solarweatherstation/zambrettisays", tmp1, 1);
+  client.publish("weather/solarweatherstation/zambrettisays", tmp1, 1);
   delay(50);
 
   char tmp2[128];
   trend_in_words.toCharArray(tmp2, 128);
-  client.publish("home/weather/solarweatherstation/trendinwords", tmp2, 1);
+  client.publish("weather/solarweatherstation/trendinwords", tmp2, 1);
   delay(50);
 
   char _trend[8];                                // Buffer big enough for 7-character float
   dtostrf(pressure_difference[11], 3, 2, _trend);               // Leave room for too large numbers!
 
-  client.publish("home/weather/solarweatherstation/trend", _trend, 1);      // ,1 = retained
+  client.publish("weather/solarweatherstation/trend", _trend, 1);      // ,1 = retained
   delay(50);
 
   if (volt > 3.3) {          //check if batt still ok, if yes
@@ -657,7 +657,7 @@ char ZambrettiLetter() {
     }
   }
   char* tmp1 = &z_letter;
-  client.publish("home/weather/solarweatherstation/zletter", tmp1, 1);         // ,1 = retained
+  client.publish("weather/solarweatherstation/zletter", tmp1, 1);         // ,1 = retained
   delay(50);
   Serial.print("This is Zambretti's famous letter: ");
   Serial.println(z_letter);
@@ -781,7 +781,7 @@ void FirstTimeRun(){
 
 void connect_to_MQTT() {
   Serial.print("---> Connecting to MQTT, ");
-  client.setServer(mqtt_server, 1883);
+  client.setServer(mqtt_server, mqtt_port);
   
   while (!client.connected()) {
     Serial.println("reconnecting MQTT...");
@@ -795,14 +795,15 @@ void reconnect() {
   while (!client.connected()) {
     Serial.print("Attempting MQTT connection with ");
     // Create a random client ID
-    String clientId = "ESP8266Client-";
-    clientId += String(random(0xffff), HEX);
+    //String clientId = "ESP8266Client-";
+    //clientId += String(random(0xffff), HEX);
+    String clientId = "WeatherStation";
     Serial.print(clientId.c_str());
     // Attempt to connect
-    if (client.connect(clientId.c_str())) {
+    if (client.connect(clientId.c_str(), mqttUser, mqttPassword)) {
       Serial.println("connected");
        // Once connected, publish an announcement...
-      client.publish("home/debug", "SolarWeatherstation: client started...");
+      client.publish("weather/solarweatherstation/debug", "SolarWeatherstation: client started...");
       delay(50);
     } else {
       Serial.print(" ...failed, rc=");
@@ -818,7 +819,7 @@ void goToSleep(unsigned int sleepmin) {
   char tmp[128];
   String sleepmessage = "SolarWeatherstation: Taking a nap for " + String (sleepmin) + " Minutes";
   sleepmessage.toCharArray(tmp, 128);
-  client.publish("home/debug",tmp);
+  client.publish("weather/solarweatherstation/debug",tmp);
   delay(50);
  
   Serial.println("INFO: Closing the MQTT connection");
