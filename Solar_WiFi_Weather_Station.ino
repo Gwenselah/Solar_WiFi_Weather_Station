@@ -85,13 +85,15 @@
 #include <ESP8266WiFi.h>
 #include <WiFiUdp.h>
 #include "FS.h"
- #include <EasyNTPClient.h>       //https://github.com/aharshac/EasyNTPClient
+#include <EasyNTPClient.h>       //https://github.com/aharshac/EasyNTPClient
 #include <TimeLib.h>             //https://github.com/PaulStoffregen/Time.git
 #include <PubSubClient.h>        // For MQTT (in this case publishing only)
+#include "Adafruit_SI1145.h"     //For GY1145
 
 Adafruit_BME280 bme;             // I2C
 WiFiUDP udp;
 EasyNTPClient ntpClient(udp, NTP_SERVER, TZ_SEC + DST_SEC);
+Adafruit_SI1145 uv = Adafruit_SI1145();
 
 float measured_temp;
 float adjusted_temp;
@@ -104,6 +106,8 @@ float volt;
 int rel_pressure_rounded;
 double DewpointTemperature;
 float DewPointSpread;               // Difference between actual temperature and dewpoint
+float UVIndex;                      // Variables used in reading UV Index (Si1145)    
+    
 
 // FORECAST CALCULATION
 unsigned long current_timestamp;    // Actual timestamp read from NTPtime_t now;
@@ -238,6 +242,13 @@ void setup() {
                 Adafruit_BME280::FILTER_OFF   );
  
   measurementEvent();            //calling function to get all data from the different sensors
+
+  //******** Getting Data from GY1145 ************************************************ 
+  bool uv_status;
+  uv_status = uv.begin(0x60);  // 0x60 is the address of the GY1145 module     
+  if (!uv_status) {
+      Serial.println("Could not find a valid GY1145 sensor, check wiring!");
+  }  
   
   //*******************SPIFFS operations***************************************************************
 
@@ -424,6 +435,14 @@ void setup() {
   client.publish("weather/solarweatherstation/trend", _trend, 1);      // ,1 = retained
   delay(50);
 
+  //*** UV Index ***
+  char _UVIndex[8];                                // Buffer big enough for 7-character float
+  dtostrf(UVIndex, 3, 2, _UVIndex);               // Leave room for too large numbers!
+
+  client.publish("weather/solarweatherstation/uvindex", _UVIndex, 1);      // ,1 = retained
+  delay(50);
+  
+
   if (volt > 3.3) {          //check if batt still ok, if yes
     goToSleep(sleepTimeMin); //go for a nap
   }
@@ -514,12 +533,22 @@ void measurementEvent() {
   } 
   else {
     HeatIndex = adjusted_temp;
-    Serial.println("Not warm enough (less than 26.7 °C) for Heatindex");
+    Serial.println("Not warm enough (less than 26.7 °C) for Heatindex");  
   }
   Serial.print("HeatIndex: ");
   Serial.print(HeatIndex);
-  Serial.print("°C; ");
- 
+  Serial.println("°C; ");
+
+
+  //***************************************************************************
+  // Reading GY1145 UV sensor
+
+  UVIndex = uv.readUV();
+  // the index is multiplied by 100 so to get the
+  // integer index, divide by 100!
+  UVIndex /= 100.0;     
+  Serial.print("UV: "); Serial.println(UVIndex);   
+  
 } // end of void measurementEvent()
 
 int CalculateTrend(){

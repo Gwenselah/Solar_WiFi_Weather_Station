@@ -19,8 +19,8 @@ const String App2 = "";    // empty string if not applicable -> "" else "THINGSP
 
 char auth[] = "your Blynk Auth Token"; // Blynk Auth Token
 
-char ssid[] = "your SSID";                           // WiFi Router ssid
-char pass[] = "your Password";             // WiFi Router password
+char ssid[] = "IoT_2GHz";                           // WiFi Router ssid
+char pass[] = "XXX";             // WiFi Router password
 
 const char* server = "api.thingspeak.com";        // Thingspeak Write API
 const char* api_key = "your Thingspeak API key";         // API write key 
@@ -29,8 +29,8 @@ const char* api_key = "your Thingspeak API key";         // API write key
 
 const char* mqtt_server = "10.1.24.100";      // MQTT Server (broker) address
 const int mqtt_port = 1885; 
-const char* mqttUser = "MQTTUSer";
-const char* mqttPassword = "XXXXX";
+const char* mqttUser = "SonoffMQTT";
+const char* mqttPassword = "XXXX";
 
 /****** Additional Settings **************************************************/
 
